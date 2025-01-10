@@ -1,15 +1,21 @@
 """Estimate the expected value of a given strategy."""
 from __future__ import annotations
-from utils import get_cards_seen, DECK, readable_number
+
+import argparse
+import logging
+import matplotlib.pyplot as plt
+import multiprocessing
+import numpy as np
+import os
+import pandas as pd
+import random
+from typing import Iterable
+
+from utils import get_cards_seen, get_hilo_running_count, DECK, readable_number
 from action_strategies import BaseMover
 from betting_strategies import BaseBetter
-from typing import Iterable
-import matplotlib.pyplot as plt
-import random
 import betting_strategies
 import action_strategies
-import argparse
-import multiprocessing
 
 
 class Hand:
@@ -87,31 +93,31 @@ def get_mover_and_better(mover_name: str, better_name: str
     better_class: betting_strategies.BaseBetter
     if mover_name == "card-count":
         mover_class = action_strategies.CardCountMover(
-            {(-1000, -10): "data/6deck_s17_das_peek_tc_minus_10.csv",
-             (-10, -9): "data/6deck_s17_das_peek_tc_minus_9.csv",
-             (-9, -8): "data/6deck_s17_das_peek_tc_minus_8.csv",
-             (-8, -7): "data/6deck_s17_das_peek_tc_minus_7.csv",
-             (-7, -6): "data/6deck_s17_das_peek_tc_minus_6.csv",
-             (-6, -5): "data/6deck_s17_das_peek_tc_minus_5.csv",
-             (-5, -4): "data/6deck_s17_das_peek_tc_minus_4.csv",
-             (-4, -3): "data/6deck_s17_das_peek_tc_minus_3.csv",
-             (-3, -2): "data/6deck_s17_das_peek_tc_minus_2.csv",
-             (-2, -1): "data/6deck_s17_das_peek_tc_minus_1.csv",
-             (-1, 1): "data/6deck_s17_das_peek_tc_0.csv",
-             (1, 2): "data/6deck_s17_das_peek_tc_plus_1.csv",
-             (2, 3): "data/6deck_s17_das_peek_tc_plus_2.csv",
-             (3, 4): "data/6deck_s17_das_peek_tc_plus_3.csv",
-             (4, 5): "data/6deck_s17_das_peek_tc_plus_4.csv",
-             (5, 6): "data/6deck_s17_das_peek_tc_plus_5.csv",
-             (6, 7): "data/6deck_s17_das_peek_tc_plus_6.csv",
-             (7, 8): "data/6deck_s17_das_peek_tc_plus_7.csv",
-             (8, 9): "data/6deck_s17_das_peek_tc_plus_8.csv",
-             (9, 10): "data/6deck_s17_das_peek_tc_plus_9.csv",
-             (10, 1000): "data/6deck_s17_das_peek_tc_plus_10.csv"})
+            {(-1000, -10): "data/s17/6deck_s17_das_peek_tc_minus_10.csv",
+             (-10, -9): "data/s17/6deck_s17_das_peek_tc_minus_9.csv",
+             (-9, -8): "data/s17/6deck_s17_das_peek_tc_minus_8.csv",
+             (-8, -7): "data/s17/6deck_s17_das_peek_tc_minus_7.csv",
+             (-7, -6): "data/s17/6deck_s17_das_peek_tc_minus_6.csv",
+             (-6, -5): "data/s17/6deck_s17_das_peek_tc_minus_5.csv",
+             (-5, -4): "data/s17/6deck_s17_das_peek_tc_minus_4.csv",
+             (-4, -3): "data/s17/6deck_s17_das_peek_tc_minus_3.csv",
+             (-3, -2): "data/s17/6deck_s17_das_peek_tc_minus_2.csv",
+             (-2, -1): "data/s17/6deck_s17_das_peek_tc_minus_1.csv",
+             (-1, 1): "data/s17/6deck_s17_das_peek_tc_0.csv",
+             (1, 2): "data/s17/6deck_s17_das_peek_tc_plus_1.csv",
+             (2, 3): "data/s17/6deck_s17_das_peek_tc_plus_2.csv",
+             (3, 4): "data/s17/6deck_s17_das_peek_tc_plus_3.csv",
+             (4, 5): "data/s17/6deck_s17_das_peek_tc_plus_4.csv",
+             (5, 6): "data/s17/6deck_s17_das_peek_tc_plus_5.csv",
+             (6, 7): "data/s17/6deck_s17_das_peek_tc_plus_6.csv",
+             (7, 8): "data/s17/6deck_s17_das_peek_tc_plus_7.csv",
+             (8, 9): "data/s17/6deck_s17_das_peek_tc_plus_8.csv",
+             (9, 10): "data/s17/6deck_s17_das_peek_tc_plus_9.csv",
+             (10, 1000): "data/s17/6deck_s17_das_peek_tc_plus_10.csv"})
     elif mover_name == "basic-strategy-deviations":
-        mover_class = action_strategies.BasicStrategyDeviationsMover("data/6deck_s17_das_peek_basic_strategy.csv")
+        mover_class = action_strategies.BasicStrategyDeviationsMover("data/s17/6deck_s17_das_peek_basic_strategy.csv")
     elif mover_name == "basic-strategy":
-        mover_class = action_strategies.BasicStrategyMover("data/6deck_s17_das_peek_basic_strategy.csv")
+        mover_class = action_strategies.BasicStrategyMover("data/s17/6deck_s17_das_peek_basic_strategy.csv")
     elif mover_name == "perfect":
         mover_class = action_strategies.PerfectMover()
     elif mover_name == "simple":
@@ -120,12 +126,6 @@ def get_mover_and_better(mover_name: str, better_name: str
         mover_class = getattr(action_strategies, mover_name)()
     if better_name == "card-count":
         better_class = betting_strategies.CardCountBetter()
-    elif better_name == "conservative-card-count":
-        better_class = betting_strategies.ConservativeCardCountBetter()
-    elif better_name == "wonging-card-count":
-        better_class = betting_strategies.WongingCardCountBetter()
-    elif better_name == "wonging-conservative-card-count":
-        better_class = betting_strategies.WongingConservativeCardCountBetter()
     elif better_name == "simple":
         better_class = betting_strategies.SimpleBetter()
     else:  # Run a user-defined class.
@@ -146,13 +146,15 @@ def play_dealer(dealer_cards: Iterable[int], shoe: list[int], dealer_stands_soft
     while dealer.value() < 17 or not dealer_stands_soft_17 and dealer.value() == 17 and dealer.aces():
         dealer.add_card(get_card_from_shoe(shoe))
     dealer_value = dealer.value()
+    # logging.debug("dealer cards are: {}".format(dealer.cards))
+    # logging.debug("dealer_value = {}".format(dealer_value))
     return dealer_value if dealer_value <= 21 else 0
 
 
 def play_hand(action_class: action_strategies.BaseMover,
               hand_cards: list[list[int]], dealer_up_card: int, dealer_down_card: int, shoe: list[int],
               splits_remaining: int, deck_number: int, dealer_peeks_for_blackjack: bool = True, das: bool = True,
-              dealer_stands_soft_17: bool = True) -> tuple[list[list[int]], int]:
+              dealer_stands_soft_17: bool = True) -> list[list[int]]:
     """
     Play hands but don't play the dealer.
 
@@ -168,7 +170,6 @@ def play_hand(action_class: action_strategies.BaseMover,
     :param dealer_stands_soft_17: Whether the dealer stands on soft 17.
     :return: The hands played out.
     """
-    splits_used = 0
     done_hands = []
     for hand_index, cards in enumerate(hand_cards):
         if Hand(cards).value() > 21:
@@ -187,46 +188,45 @@ def play_hand(action_class: action_strategies.BaseMover,
                                                dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
 
         if action == "s":
+            # logging.debug("[play_hand] player stands.")
             done_hands.append(cards)
 
         elif action == "d" and can_double:
             card = get_card_from_shoe(shoe)
             hand.add_card(card)
+            # logging.debug("[play_hand] player doubles down and gets card {}. Current hand is {}.".format(card, hand.cards))
             done_hands.append(hand.cards)
             done_hands.append(hand.cards)  # Add the same hand twice instead of doubling the bet.
 
         elif action == "h":
             card = get_card_from_shoe(shoe)
             hand.add_card(card)
-            hand_cards, _ = play_hand(action_class, [hand.cards], dealer_up_card, dealer_down_card, shoe,
-                                      0, deck_number, dealer_peeks_for_blackjack, das,
-                                      dealer_stands_soft_17)
-            done_hands.append(hand_cards[0])
+            # logging.debug("[play_hand] player hits and gets card {}. Current hand is {}.".format(card, hand.cards))
+            done_hands.append(play_hand(action_class, [hand.cards], dealer_up_card, dealer_down_card, shoe,
+                                        0, deck_number, dealer_peeks_for_blackjack, das,
+                                        dealer_stands_soft_17)[0])
 
         elif action == "p" and can_split:
-            splits_used += 1
             hand1 = Hand([hand.cards[0]])
             hand2 = Hand([hand.cards[1]])
             card1 = get_card_from_shoe(shoe)
             hand1.add_card(card1)
-            done_split_hands, splits_used_first_hand = play_hand(action_class, [hand1.cards], dealer_up_card,
-                                                                 dealer_down_card, shoe, splits_remaining - 1, deck_number,
-                                                                 dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
-            done_hands.extend(done_split_hands)
-            splits_used += splits_used_first_hand
+            # logging.debug("[play_hand] player splits and gets card {} for the 1st hand. Current hand is {}.".format(card1, hand1.cards))
+            done_hands.extend(play_hand(action_class, [hand1.cards] + hand_cards[hand_index + 1:],
+                                        dealer_up_card, dealer_down_card, shoe, splits_remaining - 1, deck_number,
+                                        dealer_peeks_for_blackjack, das, dealer_stands_soft_17))
             card2 = get_card_from_shoe(shoe)
             hand2.add_card(card2)
-            done_split_hands, splits_used_second_hand = play_hand(action_class, [hand2.cards] + hand_cards[hand_index + 1:],
-                                                                  dealer_up_card, dealer_down_card, shoe,
-                                                                  splits_remaining - splits_used, deck_number,
-                                                                  dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
-            done_hands.extend(done_split_hands)
-            splits_used += splits_used_second_hand
+            # logging.debug("[play_hand] player splits and gets card {} for the 2nd hand. Current hand is {}.".format(card2, hand2.cards))
+            done_hands.extend(play_hand(action_class, [hand2.cards] + hand_cards[hand_index + 1:],
+                                        dealer_up_card, dealer_down_card, shoe, splits_remaining - 1, deck_number,
+                                        dealer_peeks_for_blackjack, das, dealer_stands_soft_17))
             break
 
         else:
             raise ValueError(f"invalid action: {action}.")
-    return done_hands, splits_used
+    # logging.debug("[play_hand] done. return with hands = {}".format(done_hands))
+    return done_hands
 
 
 def simulate_hand(action_class: action_strategies.BaseMover,
@@ -272,114 +272,169 @@ def simulate_hand(action_class: action_strategies.BaseMover,
 
     if dealer_peeks_for_blackjack:
         if dealer_has_blackjack and player_has_blackjack:  # Push
+            # logging.debug("dealer and player get natural blackjack. Push...")
             return 0 + insurance_profit
         elif dealer_has_blackjack:  # Dealer blackjack
+            # logging.debug("dealer gets natural blackjack. Player loses...")
             return -1 + insurance_profit
         elif player_has_blackjack:  # Player blackjack
+            # logging.debug("players gets natural blackjack. Player wins 3 to 2...")
             return 1 * 3 / 2 + insurance_profit
     else:
         if player_has_blackjack and dealer_has_blackjack:
+            # logging.debug("dealer and player get natural blackjack (no peeking). Push...")
             return 0 + insurance_profit
         elif player_has_blackjack:
+            # logging.debug("players gets natural blackjack (no peeking). Player wins 3 to 2...")
             return 1 * 3 / 2 + insurance_profit
 
     if action == "u" and can_surrender_now:
+        # logging.debug("player surrenders...")
         return -.5 + insurance_profit
 
     elif action == "s":
+        # logging.debug("player stands...")
         dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
         if player_loses_all_bets:
+            # logging.debug("player loses: {} to {}".format(initial_hand_value, dealer_value))
             return -1 + insurance_profit
         if initial_hand_value > dealer_value:
+            # logging.debug("player wins: {} to {}".format(initial_hand_value, dealer_value))
             return 1 + insurance_profit
         elif initial_hand_value < dealer_value:
+            # logging.debug("player loses: {} to {}".format(initial_hand_value, dealer_value))
             return -1 + insurance_profit
+        logging.debug("push: {} to {}".format(initial_hand_value, dealer_value))
         return 0 + insurance_profit
 
     elif action == "d" and can_double:
         card = get_card_from_shoe(shoe)
+        # logging.debug("player doubling... get card {}".format(card))
         hand.add_card(card)
         if player_loses_all_bets:
+            # logging.debug("player loses all bets")
             return -2 + insurance_profit
         if hand.value() > 21:
+            # logging.debug("player busted at {}".format(hand.value()))
             return -2 + insurance_profit
         dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
         if hand.value() > dealer_value:
+            # logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
             return +2 + insurance_profit
         elif hand.value() < dealer_value:
+            # logging.debug("player loses {} to {}".format(hand.value(), dealer_value))
             return -2 + insurance_profit
+        # logging.debug("push {} to {}".format(hand.value(), dealer_value))
         return 0 + insurance_profit
 
     elif action == "h":
         card = get_card_from_shoe(shoe)
         hand.add_card(card)
+        # logging.debug("player hits ... get new card {}. Hand is {}".format(card, hand.cards))
         if player_loses_all_bets:
+            # logging.debug("player loses all bets")
             return -1 + insurance_profit
         if hand.value() > 21:
+            # logging.debug("player busted at {}".format(hand.value()))
             return -1 + insurance_profit
-        hands, _ = play_hand(action_class, [hand.cards], dealer_up_card, dealer_down_card, shoe,
-                             splits_remaining, deck_number, dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
-        hand = Hand(hands[0])
+        hand_cards = play_hand(action_class, [hand.cards], dealer_up_card, dealer_down_card, shoe,
+                               splits_remaining, deck_number, dealer_peeks_for_blackjack, das, dealer_stands_soft_17)[0]
+        hand = Hand(hand_cards)
+        # logging.debug("player keeps hitting. hand is {}".format(hand.cards))
+        if hand.value() > 21:
+            # logging.debug("player busted: {}".format(hand.value()))
+            return -1 + insurance_profit
         dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
-        if hand.value() > 21 or dealer_value > hand.value():
+        if dealer_value > hand.value():
+            # logging.debug("player gets beat {} to {}".format(hand.value(), dealer_value))
             return -1 + insurance_profit
         elif hand.value() > dealer_value:
+            # logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
             return 1 + insurance_profit
+        # logging.debug("push: {} to {}".format(hand.value(), dealer_value))
         return 0 + insurance_profit
 
     elif action == "p" and can_split:
         hand1 = Hand([hand.cards[0]])
         hand2 = Hand([hand.cards[1]])
         if hand.cards[0] == 11:
+            # logging.debug("current 10 cards of the shoe: {}".format(shoe[-10:]))
             card = get_card_from_shoe(shoe)
             hand1.add_card(card)
+            # logging.debug("player splits AA: first new card = {}. Hand is {}".format(card, hand1.cards))
             card = get_card_from_shoe(shoe)
             hand2.add_card(card)
+            # logging.debug("player splits AA: 2nd new card = {}. Hand is {}".format(card, hand2.cards))
             if player_loses_all_bets:
+                # logging.debug("player loses all bets AA")
                 return -2 + insurance_profit
             dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
             split_profit = 0
             if hand1.value() > 21 or dealer_value > hand1.value():
+                # logging.debug("player AA 1st hand busted or gets beat {} to {}".format(hand1.value(), dealer_value))
                 split_profit -= 1
             elif hand1.value() > dealer_value:
+                # logging.debug("player AA 1st hand wins {} to {}".format(hand1.value(), dealer_value))
                 split_profit += 1
             if hand2.value() > 21 or dealer_value > hand2.value():
+                # logging.debug("player AA 2nd hand busted or gets beat {} to {}".format(hand2.value(), dealer_value))
                 split_profit -= 1
             elif hand2.value() > dealer_value:
+                # logging.debug("player AA 2nd hand wins {} to {}".format(hand2.value(), dealer_value))
                 split_profit += 1
             return split_profit + insurance_profit
+        # logging.debug("current 10 cards of the shoe: {}".format(shoe[-10:]))
         card1 = get_card_from_shoe(shoe)
         hand1.add_card(card1)
-        all_hands, splits_used = play_hand(action_class, [hand1.cards], dealer_up_card, dealer_down_card, shoe,
-                                           splits_remaining - 1, deck_number, dealer_peeks_for_blackjack, das,
-                                           dealer_stands_soft_17)
+        # logging.debug("1st card is popped. Card = {}. Hands = {}. remaining shoe = {}".format(card1, hand1.cards, shoe[-10:]))
+        # logging.debug("player split non-AA, 1st hand gets {}".format(card1))
+        hand1_all = play_hand(action_class, [hand1.cards], dealer_up_card, dealer_down_card, shoe,
+                              splits_remaining - 1, deck_number, dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
         card2 = get_card_from_shoe(shoe)
         hand2.add_card(card2)
-        done_hands, _ = play_hand(action_class, [hand2.cards], dealer_up_card, dealer_down_card, shoe,
-                                  splits_remaining - 1 - splits_used, deck_number, dealer_peeks_for_blackjack, das,
-                                  dealer_stands_soft_17)
-        all_hands += done_hands
+        # logging.debug("2nd card is popped. Card = {}. Hands = {}. remaining shoe = {}".format(card2, hand2.cards, shoe[-10:]))
+        # logging.debug("player split non-AA, 2nd hand gets {}".format(card2))
+        hand2_all = play_hand(action_class, [hand2.cards], dealer_up_card, dealer_down_card, shoe,
+                              splits_remaining - 1, deck_number, dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
+        all_hands = hand1_all + hand2_all
         if player_loses_all_bets:
+            # logging.debug("player loses all bets")
             return -len(all_hands) + insurance_profit
-        dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
+
         split_profit = 0
+        busted_counter = 0
+        for hand_cards in all_hands:
+            if hand.value() > 21:
+                # logging.debug("player busted {} to {}".format(hand.value(), dealer_value))
+                split_profit -= 1
+                busted_counter += 1
+        if busted_counter == len(all_hands):
+            return split_profit + insurance_profit
+
+        # logging.debug("player all hands are done. {} hands are: {}".format(len(all_hands), all_hands))
+        dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)        
         for hand_cards in all_hands:
             hand = Hand(hand_cards)
             if hand.value() > 21 or dealer_value > hand.value():
+                # logging.debug("player busted or gets beaten {} to {}".format(hand.value(), dealer_value))
                 split_profit -= 1
             elif hand.value() > dealer_value:
+                # logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
                 split_profit += 1
+            else:
+                # logging.debug("push: {} to {}".format(hand.value(), dealer_value))
+                pass
         return split_profit + insurance_profit
 
     raise ValueError(f"invalid action: {action}.")
 
-
+# @profile
 def expected_value(action_class: action_strategies.BaseMover, betting_class: betting_strategies.BaseBetter,
                    simulations: int, deck_number: int = 6, shoe_penetration: float = .25,
                    dealer_peeks_for_blackjack: bool = True, das: bool = True,
                    dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
                    units: int = 200, hands_played: int = 1000,
-                   plot_profits: bool = True, print_info: bool = True) -> tuple[float, float, float, float, float]:
+                   number_of_other_players: int = 0) -> tuple[float, float, float, float]:
     """
     Estimate the expected value of a strategy.
 
@@ -403,138 +458,209 @@ def expected_value(action_class: action_strategies.BaseMover, betting_class: bet
     reshuffle_at = int(starting_number * shoe_penetration)
     shoe = starting_shoe.copy()
     random.shuffle(shoe)
-    profit = 0.
-    profits_over_time_hand = [profit]
+    
     bets = []
+    reward_record = [] # record reward at the end of every hand
+    tc_record = [] # record tc at the beginning of every hand
+
     for i in range(simulations):
-        if print_info and i % 10_000 == 0:
+        if i % 10_000 == 0:
             print(f"Games played: {readable_number(i)}/{readable_number(simulations)}")
+        cards_seen = []
         while len(shoe) >= reshuffle_at:
             cards_seen = get_cards_seen(deck_number, shoe)
+            run_count = get_hilo_running_count(cards_seen)
+            true_count = run_count / (len(shoe) / 52.0)
+            tc_record.append(true_count)
             initial_bet = betting_class.get_bet(cards_seen, deck_number)
-            player_cards = [get_card_from_shoe(shoe)]
+            player_card_1 = get_card_from_shoe(shoe)
             dealer_up_card = get_card_from_shoe(shoe)
-            player_cards.append(get_card_from_shoe(shoe))
+            player_card_2 = get_card_from_shoe(shoe)
             dealer_down_card = get_card_from_shoe(shoe)
-
-            cards_seen.extend([dealer_up_card] + player_cards)
-
+            player_cards = [player_card_1, player_card_2]
+            cards_seen = get_cards_seen(deck_number, shoe)
+            cards_seen.remove(dealer_down_card)
             reward = simulate_hand(action_class, player_cards, dealer_up_card,
                                    dealer_down_card, shoe, 3, deck_number,
                                    dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed)
+            
             reward *= initial_bet
-            profit += reward
+            reward_record.append(reward)
             bets.append(initial_bet)
-            profits_over_time_hand.append(profit)
-
+        
         shoe = starting_shoe.copy()
         random.shuffle(shoe)
+    
+    # if print_info:
+    #     print(f"Total profit: {profit}, Average profit: {avg_profit}, Average bet: {avg_bet}, Risk of ruin: {risk_of_ruin}")
+    # if plot_profits:
+    #     plt.plot(profits_over_time_game, label="Total profit")
+    #     plt.xlabel("Games played")
+    #     plt.ylabel("Total profit")
+    #     plt.title("Profits over time")
+    #     plt.legend()
+    #     plt.show()
 
-    avg_profit = profit / sum(bets)
-    avg_bet = sum(bets) / len(bets)
-    non_zero_bets = [b for b in bets if b > 0]
-    if not non_zero_bets:
-        non_zero_bets = [0]
-    avg_non_zero_bet = sum(non_zero_bets) / len(non_zero_bets)
-    risk_of_ruin_list = [(1 if p - profits_over_time_hand[i - hands_played] <= -units else 0)
-                         for i, p in enumerate(profits_over_time_hand) if i >= hands_played]
-    risk_of_ruin = sum(risk_of_ruin_list) / len(risk_of_ruin_list)
-    if print_info:
-        print(f"Total profit: {profit}, Average profit: {avg_profit}, Average bet: {avg_bet}, "
-              f"Average bet (if Wonging): {avg_non_zero_bet}, Risk of ruin: {risk_of_ruin}")
-    if plot_profits:
-        plt.plot(profits_over_time_hand, label="Total profit")
-        plt.xlabel("Hands played")
-        plt.ylabel("Total profit")
-        plt.title("Profits over time")
-        plt.legend()
-        plt.show()
-
-    return profit, avg_profit, avg_bet, avg_non_zero_bet, risk_of_ruin
+    return bets, reward_record, tc_record
 
 
-def _expected_value_multithreading_wrapper(results: multiprocessing.Queue[tuple[float, float, float, float, float]],
-                                           action_class: action_strategies.BaseMover,
-                                           betting_class: betting_strategies.BaseBetter,
-                                           simulations: int, deck_number: int = 6, shoe_penetration: float = .25,
-                                           dealer_peeks_for_blackjack: bool = True, das: bool = True,
-                                           dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
-                                           units: int = 200, hands_played: int = 1000) -> None:
-    """
-    Estimate the expected value of a strategy. Used inside multithreading. Don't use this function directly.
+def _ev_mt_wrapper(action_class: action_strategies.BaseMover = None, betting_class: betting_strategies.BaseBetter = None,
+          total_simulations: int = 100, deck_number: int = 6, shoe_penetration: float = .25,
+          dealer_peeks_for_blackjack: bool = True, das: bool = True,
+          dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
+          units: int = 200, hands_played: int = 1000, mt_idx=None, result_dict = None):
 
-    :param action_class: The class that chooses the action.
-    :param betting_class: The class that chooses the bet.
-    :param simulations: How many hands to play.
-    :param deck_number: The number of decks in the initial shoe.
-    :param shoe_penetration: When to reshuffle the shoe. Reshuffles when cards remaining < starting cards * deck penetration.
-    :param dealer_peeks_for_blackjack: Whether the dealer peeks for blackjack.
-    :param das: Whether we can double after splitting.
-    :param dealer_stands_soft_17: Whether the dealer stands on soft 17.
-    :param surrender_allowed: Whether the game rules allow surrendering.
-    :param units: The number of units in total.
-    :param hands_played: How many hands to play before checking the risk of ruin.
-    """
-    results.put(expected_value(action_class, betting_class, simulations, deck_number, shoe_penetration,
-                               dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed,
-                               units, hands_played, False, False))
+    b, r, c = expected_value(action_class, betting_class, total_simulations, deck_number, shoe_penetration,
+                  dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed,
+                  units, hands_played)
+    result_dict[mt_idx] = [b, r, c]
 
 
-def expected_value_multithreading(action_class: action_strategies.BaseMover, betting_class: betting_strategies.BaseBetter,
-                                  total_simulations: int, cores: int = 2, deck_number: int = 6, shoe_penetration: float = .25,
-                                  dealer_peeks_for_blackjack: bool = True, das: bool = True,
-                                  dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
-                                  units: int = 200, hands_played: int = 1000) -> tuple[float, float, float, float]:
-    """
-    Estimate the expected value of a strategy, using multithreading to speed up the process. Can't plot the results.
-
-    :param action_class: The class that chooses the action.
-    :param betting_class: The class that chooses the bet.
-    :param total_simulations: How many hands to play in total.
-    :param cores: How many cores to use for the simulation.
-    :param deck_number: The number of decks in the initial shoe.
-    :param shoe_penetration: When to reshuffle the shoe. Reshuffles when cards remaining < starting cards * deck penetration.
-    :param dealer_peeks_for_blackjack: Whether the dealer peeks for blackjack.
-    :param das: Whether we can double after splitting.
-    :param dealer_stands_soft_17: Whether the dealer stands on soft 17.
-    :param surrender_allowed: Whether the game rules allow surrendering.
-    :param units: The number of units in total.
-    :param hands_played: How many hands to play before checking the risk of ruin.
-    :return: The total return, the average return of a game, the average bet size, and the risk of ruin.
-    """
-    core_results: multiprocessing.Queue[tuple[float, float, float, float, float]] = multiprocessing.Queue()
-    worker_pool = []
-    for _ in range(cores):
-        p = multiprocessing.Process(target=_expected_value_multithreading_wrapper,
-                                    args=(core_results, action_class, betting_class, total_simulations // cores,
-                                          deck_number, shoe_penetration, dealer_peeks_for_blackjack, das,
-                                          dealer_stands_soft_17, surrender_allowed, units, hands_played))
+def ev_mt(cores=2, action_class: action_strategies.BaseMover = None, betting_class: betting_strategies.BaseBetter = None,
+          total_simulations: int = 100, deck_number: int = 6, shoe_penetration: float = .25,
+          dealer_peeks_for_blackjack: bool = True, das: bool = True,
+          dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
+          units: int = 200, hands_played: int = 1000):
+    
+    processes = []
+    return_dict = multiprocessing.Manager().dict()
+    for i in range(cores):
+        p = multiprocessing.Process(
+            target=_ev_mt_wrapper, 
+            args=(action_class, betting_class, total_simulations//cores, deck_number, shoe_penetration,
+                  dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed,
+                  units, hands_played, i, return_dict,),
+            name="ev_mt_{}".format(i))
+        processes.append(p)
         p.start()
-        worker_pool.append(p)
-    for p in worker_pool:
-        p.join()  # Wait for all the workers to finish.
-    profit = 0.
-    avg_profit = 0.
-    avg_bet = 0.
-    avg_non_zero_bet = 0.
-    avg_risk_of_ruin = 0.
-    for _ in range(cores):
-        profit_core, avg_profit_core, avg_bet_core, avg_non_zero_bet_core, risk_of_ruin = core_results.get()
-        profit += profit_core
-        avg_profit += avg_profit_core
-        avg_bet += avg_bet_core
-        avg_non_zero_bet += avg_non_zero_bet_core
-        avg_risk_of_ruin += risk_of_ruin
-    avg_bet /= cores
-    avg_non_zero_bet /= cores
-    avg_profit /= cores
-    avg_risk_of_ruin /= cores
-    print(f"Total profit: {profit}, Average profit: {avg_profit}, Average bet: {avg_bet}, "
-          f"Average bet (if Wonging): {avg_non_zero_bet}, Risk of ruin: {avg_risk_of_ruin}")
-    return profit, avg_profit, avg_bet, avg_risk_of_ruin
+    for p in processes:
+        p.join()
+    
+    bets = []
+    rewards = []
+    tcs = []
+    for i in range(cores):
+        cres = return_dict.get(i)
+        bets += cres[0]
+        rewards += cres[1]
+        tcs += cres[2]
+    return bets, rewards, tcs
+        
 
+def calculate_sum_in_chunks(values, chunk_size=100):
+    # Split the list into chunks of size 'chunk_size'
+    chunks = [values[i:i + chunk_size] for i in range(0, len(values), chunk_size)]
+    res = []
+    for chunk in chunks:
+        # Convert to numpy array for calculation
+        np_chunk = np.array(chunk)
+        res.append(np.sum(np_chunk))
+    return res
+
+def calc_ror(win_prob, loss_prob, num_of_bet):
+    # wl = (1 - win_prob / loss_prob) ** num_of_bet
+    # return (wl - (loss_prob / win_prob) ** num_of_bet) / (wl - 1)
+    return ((1 - (win_prob - loss_prob)) / (1 + (win_prob - loss_prob))) ** num_of_bet
+
+def calculate_max_drawdown_and_duration(pnl_series):
+    # Convert PnL to cumulative returns
+    cumulative_returns = np.cumsum(pnl_series)
+    
+    # Calculate the running maximum
+    running_max = np.maximum.accumulate(cumulative_returns)
+    
+    # Drawdown is the difference between running max and current value
+    drawdowns = running_max - cumulative_returns
+    
+    # Maximum Drawdown
+    max_drawdown = np.max(drawdowns)
+    
+    # Find the index where max drawdown occurs
+    max_drawdown_index = np.argmax(drawdowns)
+    
+    # Find the index where the peak before max drawdown occurred
+    peak_index = np.argmax(cumulative_returns[:max_drawdown_index + 1])
+    
+    # Duration of max drawdown is from peak to trough
+    drawdown_duration = max_drawdown_index - peak_index + 1  # +1 for inclusive count
+    
+    return max_drawdown, drawdown_duration
+
+def run(mover: action_strategies.BaseMover, better: betting_strategies.BaseBetter,
+        total_simulations: int, cores: int = 2, deck_number: int = 6, shoe_penetration: float = .25,
+        dealer_peeks_for_blackjack: bool = True, das: bool = True,
+        dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
+        units: int = 200, hands_played: int = 1000):
+    if cores > 1:
+        bets, rewards, tcs = ev_mt(
+            cores, mover, better, total_simulations, deck_number, shoe_penetration,
+            dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed, units, hands_played
+            )
+    else:
+        bets, rewards, tcs = expected_value(
+            mover, better, simulations=total_simulations, deck_number=deck_number, shoe_penetration=shoe_penetration,
+            dealer_peeks_for_blackjack=dealer_peeks_for_blackjack, das=das, dealer_stands_soft_17=dealer_stands_soft_17, 
+            surrender_allowed=surrender_allowed, units=units, hands_played=hands_played
+            )
+
+    summary = {"shoes": total_simulations,
+               "hands_per_shoe": len(bets) / total_simulations,
+               "avg_bet": np.nan, "win_2_lose": np.nan,
+               "ev_per_shoe": np.nan, "ev_per_100": np.nan, "std_per_shoe": np.nan,
+               "std_per_100": np.nan, "max_dd": np.nan, "dd_duration_in_hands": np.nan}
+    if len(bets) > 0:
+        summary['avg_bet'] = sum(bets) / len(bets)
+        total_win = sum([x for x in rewards if x > 0])
+        total_loss = sum([-x for x in rewards if x < 0])
+        summary['win_2_lose'] =  total_win / total_loss
+        summary['ev_per_shoe'] = sum(rewards) / total_simulations
+        summary['std_per_shoe'] = np.std(rewards) * np.sqrt(len(bets) / total_simulations)
+        sum_per_100 = calculate_sum_in_chunks(rewards, 100)
+        summary['ev_per_100'] = np.mean(sum_per_100)
+        summary['std_per_100'] = np.std(sum_per_100)
+        num_of_win = sum([1 for x in rewards if x > 0])
+        num_of_loss = sum([1 for x in rewards if x < 0])
+        win_prob = num_of_win / len(bets)
+        loss_prob = num_of_loss / len(bets)
+        dd, ddd = calculate_max_drawdown_and_duration(rewards)
+        summary['max_dd'] = dd
+        summary['dd_duration_in_hands'] = ddd
+        # summary['risk_of_ruin'] = calc_ror(win_prob, loss_prob, summary['num_of_hands'])
+
+    print_unit_size = 20
+    print_1st = "|".join([x.center(print_unit_size) for x in summary.keys()])
+    print_1st = "|" + print_1st + '|'
+    print_2nd = "|".join([("{:.3f}".format(x)).center(print_unit_size) for x in summary.values()])
+    print_2nd = "|" + print_2nd + '|'
+    print('=' * ((print_unit_size + 1) * len(summary) + 1))
+    print(print_1st)
+    print('-' * ((print_unit_size + 1) * len(summary) + 1))
+    print(print_2nd)
+    print('=' * ((print_unit_size + 1) * len(summary) + 1))
+
+    # stats for reward-true count:
+    df = pd.DataFrame({
+        'true_count': tcs,
+        'rewards': rewards
+        })
+    bins = [-21, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 21]
+    labels = ['-20 to -1', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11 to 20']
+    df['tc'] = pd.cut(df['true_count'], bins=bins, labels=labels, right=False)
+    pivot_table = df.pivot_table(values='rewards', index='tc', aggfunc={'rewards': ['mean', 'std']}, observed=False)
+    print("----------- ev per tc --------------")
+    print(pivot_table)
+
+    pnl = np.cumsum(rewards)
+    plt.plot(pnl, label="Accumulated Profit")
+    plt.xlabel("Hands played")
+    plt.ylabel("Total profit")
+    plt.title("PnL Curve")
+    plt.legend()
+    plt.show()    
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='expected_value.log', level=logging.INFO, 
+                        format='%(asctime)s:%(levelname)s:%(message)s')
     parser = argparse.ArgumentParser(prog='Expected Value (EV) Calculation',
                                      description='Evaluate the profitability of different blackjack strategies by calculating'
                                                  ' their expected value (EV).')
@@ -548,8 +674,7 @@ if __name__ == "__main__":
                              'default: card-count)')
     parser.add_argument("-b", "--better", default="card-count",
                         help='Use a predefined better. Can also be the name of the class of a user-defined better. '
-                             '(possible values: card-count, conservative-card-count, wonging-card-count, '
-                             'wonging-conservative-card-count, simple; default: card-count)')
+                             '(possible values: card-count, simple; default: card-count)')
     parser.add_argument("-s", "--simulations", default=100_000, type=int,
                         help='How many simulations to run. Running more simulations gives more accurate '
                              'results but they are slower to calculate. (default: 100,000)')
@@ -580,14 +705,19 @@ if __name__ == "__main__":
 
     if args.custom:
         # ADD CUSTOM CODE HERE IF YOU HAVE BUILT YOUR OWN MOVER OR BETTER.
-        mover = BaseMover()  # Replace BaseMover with your own class.
-        better = BaseBetter()  # Replace BaseBetter with your own class.
+        mover = action_strategies.CardCountMover({(-1000, -1): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_minus_1.csv'),
+                                              (-1, 0): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_minus_0.csv'),
+                                              (0, 1): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_plus_0.csv'),
+                                              (1, 2): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_plus_1.csv'),
+                                              (2, 3): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_plus_2.csv'),
+                                              (3, 4): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_plus_3.csv'),
+                                              (4, 5): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_plus_4.csv'),
+                                              (5, 6): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_plus_5.csv'),
+                                              (6, 100): os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_tc_plus_6.csv'),
+                                             })
+        # mover = action_strategies.BasicStrategyDeviationsMover(os.path.join(os.path.dirname(__file__), 'data', 's17', '6deck_s17_das_peek_basic_strategy.csv'))
+        better = betting_strategies.LinearBetterWongIn()
     else:
         mover, better = get_mover_and_better(args.mover, args.better)
-
-    if cores_used > 1:
-        expected_value_multithreading(mover, better, args.simulations, cores_used, args.decks, args.deck_penetration,
-                                      peek_for_bj, das_allowed, stand_soft_17, can_surrender, args.units, args.hands_played)
-    else:
-        expected_value(mover, better, args.simulations, args.decks, args.deck_penetration, peek_for_bj, das_allowed,
-                       stand_soft_17, can_surrender, args.units, args.hands_played)
+    run(mover, better, args.simulations, cores_used, args.decks, args.deck_penetration,
+        peek_for_bj, das_allowed, stand_soft_17, can_surrender, args.units, args.hands_played)

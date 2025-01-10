@@ -1,4 +1,6 @@
 """Betting strategies to be used in expected value."""
+import logging
+
 from utils import get_hilo_running_count
 
 
@@ -47,18 +49,17 @@ class CardCountBetter(BaseBetter):
         running_count = get_hilo_running_count(cards_seen)
         cards_left = deck_number * 52 - len(cards_seen) - 1
         true_count = running_count / (cards_left / 52)
-        if true_count >= 1:
-            return max(min(int(true_count ** 2 / 2), 15), 1)
+        if true_count >= 2:
+            return max(min(int(true_count ** 2), 100), 1)
         return 1
 
-
-class ConservativeCardCountBetter(BaseBetter):
-    """Change the bet according to the true count conservatively."""
+class LinearBetter(BaseBetter):
+    """Change the bet according to the true count."""
 
     @staticmethod
     def get_bet(cards_seen: list[int], deck_number: int) -> int:
         """
-        Bet true_count if true_count >= +1 else 1. Cap at 5 (using a 1-5 spread).
+        Bet (true_count - 1) / 2 if true_count >= +2 else 1. Cap at 10 (using a 1-10 spread).
 
         :param cards_seen: The cards we have already seen from the shoe. Used when card counting.
         :param deck_number: The number of decks in the starting shoe.
@@ -67,18 +68,17 @@ class ConservativeCardCountBetter(BaseBetter):
         running_count = get_hilo_running_count(cards_seen)
         cards_left = deck_number * 52 - len(cards_seen) - 1
         true_count = running_count / (cards_left / 52)
-        if true_count >= 1:
-            return max(min(int(true_count), 5), 1)
+        if true_count >= 2:
+            return max(min(int((true_count - 1) / 2), 10), 1)
         return 1
 
-
-class WongingCardCountBetter(BaseBetter):
-    """Change the bet according to the true count and use wonging (don't play if TC < 1)."""
+class LinearBetterWongIn(BaseBetter):
+    """Change the bet according to the true count."""
 
     @staticmethod
     def get_bet(cards_seen: list[int], deck_number: int) -> int:
         """
-        Bet true_count ^ 2 / 2 if true_count >= +1 else 0. Cap at 15 (using a 1-15 spread).
+        Bet (true_count - 1) / 2 if true_count >= +2 else 1. Cap at 10 (using a 1-10 spread).
 
         :param cards_seen: The cards we have already seen from the shoe. Used when card counting.
         :param deck_number: The number of decks in the starting shoe.
@@ -87,18 +87,20 @@ class WongingCardCountBetter(BaseBetter):
         running_count = get_hilo_running_count(cards_seen)
         cards_left = deck_number * 52 - len(cards_seen) - 1
         true_count = running_count / (cards_left / 52)
+        # logging.debug("running_count = {}".format(running_count))
+        # logging.debug("cards_left = {}".format(cards_left))
+        # logging.debug("true_count = {}".format(true_count))
         if true_count >= 1:
-            return max(min(int(true_count ** 2 / 2), 15), 1)
-        return 0
+            return max(min(int(true_count), 10), 1)
+        return 0.001
 
-
-class WongingConservativeCardCountBetter(BaseBetter):
-    """Change the bet according to the true count conservatively and use wonging (don't play if TC < 1)."""
+class Wong6(BaseBetter):
+    """Change the bet according to the true count."""
 
     @staticmethod
     def get_bet(cards_seen: list[int], deck_number: int) -> int:
         """
-        Bet true_count if true_count >= +1 else 0. Cap at 5 (using a 1-5 spread).
+        Bet (true_count - 1) / 2 if true_count >= +2 else 1. Cap at 10 (using a 1-10 spread).
 
         :param cards_seen: The cards we have already seen from the shoe. Used when card counting.
         :param deck_number: The number of decks in the starting shoe.
@@ -107,6 +109,9 @@ class WongingConservativeCardCountBetter(BaseBetter):
         running_count = get_hilo_running_count(cards_seen)
         cards_left = deck_number * 52 - len(cards_seen) - 1
         true_count = running_count / (cards_left / 52)
+        # logging.debug("running_count = {}".format(running_count))
+        # logging.debug("cards_left = {}".format(cards_left))
+        # logging.debug("true_count = {}".format(true_count))
         if true_count >= 1:
-            return max(min(int(true_count), 5), 1)
-        return 0
+            return max(min(int(true_count), 6), 1)
+        return 0.001
