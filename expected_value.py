@@ -11,7 +11,7 @@ import pandas as pd
 import random
 from typing import Iterable
 
-from utils import get_cards_seen, get_hilo_running_count, DECK, readable_number
+from utils import get_args_info, get_cards_seen, get_hilo_running_count, DECK, readable_number
 from action_strategies import BaseMover
 from betting_strategies import BaseBetter
 import betting_strategies
@@ -233,7 +233,7 @@ def simulate_hand(action_class: action_strategies.BaseMover,
                   cards: list[int], dealer_up_card: int,
                   dealer_down_card: int, shoe: list[int],
                   splits_remaining: int, deck_number: int, dealer_peeks_for_blackjack: bool = True, das: bool = True,
-                  dealer_stands_soft_17: bool = True, surrender_allowed: bool = True) -> float:
+                  dealer_stands_soft_17: bool = True, surrender_allowed: bool = False) -> float:
     """
     Play one hand.
 
@@ -434,7 +434,7 @@ def expected_value(action_class: action_strategies.BaseMover, betting_class: bet
                    dealer_peeks_for_blackjack: bool = True, das: bool = True,
                    dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
                    units: int = 200, hands_played: int = 1000,
-                   number_of_other_players: int = 0) -> tuple[float, float, float, float]:
+                   num_of_other_players: int = 0) -> tuple[float, float, float, float]:
     """
     Estimate the expected value of a strategy.
 
@@ -449,10 +449,14 @@ def expected_value(action_class: action_strategies.BaseMover, betting_class: bet
     :param surrender_allowed: Whether the game rules allow surrendering.
     :param units: The number of units in total.
     :param hands_played: How many hands to play before checking the risk of ruin.
-    :param plot_profits: Whether a plot showing how the profit changed over time should be made at the end.
-    :param print_info: Whether to print information about the progress of the simulation. Disabled for multithreading.
+    :param num_of_other_players: number of players in front of us on the same table, ranging from 0 to 4.
+    
+
     :return: The total return, the average return of a game, the average bet size, and the risk of ruin.
     """
+    if num_of_other_players < 0 or num_of_other_players > 4:
+        raise NotImplementedError("num_of_other_players = {}".format(num_of_other_players))
+
     starting_shoe = DECK * deck_number
     starting_number = len(starting_shoe)
     reshuffle_at = int(starting_number * shoe_penetration)
@@ -473,17 +477,21 @@ def expected_value(action_class: action_strategies.BaseMover, betting_class: bet
             true_count = run_count / (len(shoe) / 52.0)
             tc_record.append(true_count)
             initial_bet = betting_class.get_bet(cards_seen, deck_number)
+            for op in range(num_of_other_players):
+                get_card_from_shoe(shoe)
             player_card_1 = get_card_from_shoe(shoe)
             dealer_up_card = get_card_from_shoe(shoe)
+            for op in range(num_of_other_players):
+                get_card_from_shoe(shoe)
             player_card_2 = get_card_from_shoe(shoe)
             dealer_down_card = get_card_from_shoe(shoe)
             player_cards = [player_card_1, player_card_2]
             cards_seen = get_cards_seen(deck_number, shoe)
             cards_seen.remove(dealer_down_card)
+            # TODO: other players act based on basic strategy.
             reward = simulate_hand(action_class, player_cards, dealer_up_card,
                                    dealer_down_card, shoe, 3, deck_number,
                                    dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed)
-            
             reward *= initial_bet
             reward_record.append(reward)
             bets.append(initial_bet)
@@ -491,16 +499,6 @@ def expected_value(action_class: action_strategies.BaseMover, betting_class: bet
         shoe = starting_shoe.copy()
         random.shuffle(shoe)
     
-    # if print_info:
-    #     print(f"Total profit: {profit}, Average profit: {avg_profit}, Average bet: {avg_bet}, Risk of ruin: {risk_of_ruin}")
-    # if plot_profits:
-    #     plt.plot(profits_over_time_game, label="Total profit")
-    #     plt.xlabel("Games played")
-    #     plt.ylabel("Total profit")
-    #     plt.title("Profits over time")
-    #     plt.legend()
-    #     plt.show()
-
     return bets, reward_record, tc_record
 
 
@@ -508,11 +506,12 @@ def _ev_mt_wrapper(action_class: action_strategies.BaseMover = None, betting_cla
           total_simulations: int = 100, deck_number: int = 6, shoe_penetration: float = .25,
           dealer_peeks_for_blackjack: bool = True, das: bool = True,
           dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
-          units: int = 200, hands_played: int = 1000, mt_idx=None, result_dict = None):
+          units: int = 200, hands_played: int = 1000, num_of_other_players: int = 0,
+          mt_idx=None, result_dict = None):
 
     b, r, c = expected_value(action_class, betting_class, total_simulations, deck_number, shoe_penetration,
                   dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed,
-                  units, hands_played)
+                  units, hands_played, num_of_other_players)
     result_dict[mt_idx] = [b, r, c]
 
 
@@ -520,7 +519,7 @@ def ev_mt(cores=2, action_class: action_strategies.BaseMover = None, betting_cla
           total_simulations: int = 100, deck_number: int = 6, shoe_penetration: float = .25,
           dealer_peeks_for_blackjack: bool = True, das: bool = True,
           dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
-          units: int = 200, hands_played: int = 1000):
+          units: int = 200, hands_played: int = 1000, num_of_other_players: int = 0):
     
     processes = []
     return_dict = multiprocessing.Manager().dict()
@@ -529,7 +528,7 @@ def ev_mt(cores=2, action_class: action_strategies.BaseMover = None, betting_cla
             target=_ev_mt_wrapper, 
             args=(action_class, betting_class, total_simulations//cores, deck_number, shoe_penetration,
                   dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed,
-                  units, hands_played, i, return_dict,),
+                  units, hands_played, num_of_other_players, i, return_dict,),
             name="ev_mt_{}".format(i))
         processes.append(p)
         p.start()
@@ -557,10 +556,10 @@ def calculate_sum_in_chunks(values, chunk_size=100):
         res.append(np.sum(np_chunk))
     return res
 
-def calc_ror(win_prob, loss_prob, num_of_bet):
-    # wl = (1 - win_prob / loss_prob) ** num_of_bet
-    # return (wl - (loss_prob / win_prob) ** num_of_bet) / (wl - 1)
-    return ((1 - (win_prob - loss_prob)) / (1 + (win_prob - loss_prob))) ** num_of_bet
+def calc_ror(ev, sd, bankroll):
+    if sd == 0 or (1 + ev/sd) == 0:
+        return np.nan
+    return ((1 - ev/sd) / (1 + ev/sd)) ** (bankroll / sd)
 
 def calculate_max_drawdown_and_duration(pnl_series):
     # Convert PnL to cumulative returns
@@ -590,24 +589,27 @@ def run(mover: action_strategies.BaseMover, better: betting_strategies.BaseBette
         total_simulations: int, cores: int = 2, deck_number: int = 6, shoe_penetration: float = .25,
         dealer_peeks_for_blackjack: bool = True, das: bool = True,
         dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
-        units: int = 200, hands_played: int = 1000):
+        units: int = 200, hands_played: int = 1000, num_of_other_players: int = 0):
+    logging.info("expected_value.run() is called with the following configurations:")
+    logging.info(get_args_info())
     if cores > 1:
         bets, rewards, tcs = ev_mt(
             cores, mover, better, total_simulations, deck_number, shoe_penetration,
-            dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed, units, hands_played
+            dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed, units, hands_played, num_of_other_players
             )
     else:
         bets, rewards, tcs = expected_value(
             mover, better, simulations=total_simulations, deck_number=deck_number, shoe_penetration=shoe_penetration,
             dealer_peeks_for_blackjack=dealer_peeks_for_blackjack, das=das, dealer_stands_soft_17=dealer_stands_soft_17, 
-            surrender_allowed=surrender_allowed, units=units, hands_played=hands_played
+            surrender_allowed=surrender_allowed, units=units, hands_played=hands_played, num_of_other_players=num_of_other_players
             )
 
     summary = {"shoes": total_simulations,
                "hands_per_shoe": len(bets) / total_simulations,
                "avg_bet": np.nan, "win_2_lose": np.nan,
                "ev_per_shoe": np.nan, "ev_per_100": np.nan, "std_per_shoe": np.nan,
-               "std_per_100": np.nan, "max_dd": np.nan, "dd_duration_in_hands": np.nan}
+               "std_per_100": np.nan, "max_dd": np.nan, "dd_duration_in_hands": np.nan,
+               "risk_of_ruin": np.nan}
     if len(bets) > 0:
         summary['avg_bet'] = sum(bets) / len(bets)
         total_win = sum([x for x in rewards if x > 0])
@@ -625,7 +627,7 @@ def run(mover: action_strategies.BaseMover, better: betting_strategies.BaseBette
         dd, ddd = calculate_max_drawdown_and_duration(rewards)
         summary['max_dd'] = dd
         summary['dd_duration_in_hands'] = ddd
-        # summary['risk_of_ruin'] = calc_ror(win_prob, loss_prob, summary['num_of_hands'])
+        summary['risk_of_ruin'] = calc_ror(summary['ev_per_100'], summary['std_per_100'], units)
 
     print_unit_size = 20
     print_1st = "|".join([x.center(print_unit_size) for x in summary.keys()])
@@ -637,6 +639,10 @@ def run(mover: action_strategies.BaseMover, better: betting_strategies.BaseBette
     print('-' * ((print_unit_size + 1) * len(summary) + 1))
     print(print_2nd)
     print('=' * ((print_unit_size + 1) * len(summary) + 1))
+    logging.info("=" * 50)
+    logging.info("results:")
+    logging.info('\n' + ','.join(summary.keys()) + '\n' + ','.join(str(x) for x in summary.values()))
+    logging.info("=" * 50)
 
     # stats for reward-true count:
     df = pd.DataFrame({
@@ -649,6 +655,8 @@ def run(mover: action_strategies.BaseMover, better: betting_strategies.BaseBette
     pivot_table = df.pivot_table(values='rewards', index='tc', aggfunc={'rewards': ['mean', 'std']}, observed=False)
     print("----------- ev per tc --------------")
     print(pivot_table)
+    logging.info(pivot_table)
+    logging.info("=" * 50)
 
     pnl = np.cumsum(rewards)
     plt.plot(pnl, label="Accumulated Profit")

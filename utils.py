@@ -1,7 +1,7 @@
 """Utilities for the rest of the program."""
 
 from collections import Counter
-
+import inspect
 
 """The card that a suit contains."""
 SUIT: list[int] = [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11]
@@ -108,3 +108,15 @@ def readable_number(number: int) -> str:
     if number >= 1_000:
         return f"{round(number / 1_000, 1)}K"
     return str(number)
+
+def get_args_info():
+    # Get the current frame (which represents this function call)
+    frame = inspect.currentframe().f_back
+    
+    # Retrieve the arguments passed to this function
+    args, _, _, values = inspect.getargvalues(frame)
+    
+    # Create a dictionary with argument names and their values
+    args_info = {arg: values[arg] for arg in args}
+    
+    return args_info

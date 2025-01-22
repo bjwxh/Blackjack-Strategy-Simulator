@@ -115,3 +115,25 @@ class Wong6(BaseBetter):
         if true_count >= 1:
             return max(min(int(true_count), 6), 1)
         return 0.001
+
+class Wong20(BaseBetter):
+    """Change the bet according to the true count."""
+
+    @staticmethod
+    def get_bet(cards_seen: list[int], deck_number: int) -> int:
+        """
+        Bet (true_count - 1) / 2 if true_count >= +2 else 1. Cap at 10 (using a 1-10 spread).
+
+        :param cards_seen: The cards we have already seen from the shoe. Used when card counting.
+        :param deck_number: The number of decks in the starting shoe.
+        :return: How much money to bet.
+        """
+        running_count = get_hilo_running_count(cards_seen)
+        cards_left = deck_number * 52 - len(cards_seen) - 1
+        true_count = running_count / (cards_left / 52)
+        # logging.debug("running_count = {}".format(running_count))
+        # logging.debug("cards_left = {}".format(cards_left))
+        # logging.debug("true_count = {}".format(true_count))
+        if true_count >= 1:
+            return max(min(int(true_count), 20), 1)
+        return 0.001
