@@ -1,0 +1,424 @@
+2025-01-30 02:21:52,150:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 02:21:52,151:INFO:{'mover': <action_strategies.CardCountMover object at 0x15c579d30>, 'better': <betting_strategies.Wong4 object at 0x15c57aba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 02:22:02,931:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 02:22:02,932:INFO:{'mover': <action_strategies.CardCountMover object at 0x15e91dd30>, 'better': <betting_strategies.Wong4 object at 0x15e91eba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 02:22:27,638:INFO:==================================================
+2025-01-30 02:22:27,639:INFO:results:
+2025-01-30 02:22:27,639:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.88837,1.5261939352662515,1.0216624107447378,0.256915,1.725535630331117,8.347072489953982,21.619506455893564,982.5,34305,0.07568012217715668
+2025-01-30 02:22:27,639:INFO:==================================================
+2025-01-30 02:22:27,988:INFO:               mean       std
+tc                           
+-20 to -1 -0.020833  1.176800
+0         -0.007289  1.161526
+1          0.001232  1.158442
+2          0.012785  1.159805
+3          0.033293  2.315133
+4          0.056101  3.476189
+5          0.055720  4.659298
+6          0.141493  4.662476
+7          0.132480  4.705775
+8          0.167986  4.766561
+9          0.114883  4.800805
+10         0.267776  4.805217
+11 to 20   0.380614  4.767341
+2025-01-30 02:22:27,990:INFO:==================================================
+2025-01-30 02:35:10,495:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 02:35:10,495:INFO:{'mover': <action_strategies.CardCountMover object at 0x15c45dd30>, 'better': <betting_strategies.Wong4 object at 0x15c45eba0>, 'total_simulations': 10000000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 02:43:26,762:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 02:43:26,762:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a7a9d30>, 'better': <betting_strategies.Wong6 object at 0x15a7aaba0>, 'total_simulations': 10000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 02:43:34,476:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 02:43:34,476:INFO:{'mover': <action_strategies.CardCountMover object at 0x15c341d30>, 'better': <betting_strategies.Wong6 object at 0x15c342ba0>, 'total_simulations': 10000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 02:43:46,653:INFO:==================================================
+2025-01-30 02:43:46,653:INFO:results:
+2025-01-30 02:43:46,653:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+10000,46.4803,0.6582377308235963,1.048347220406659,0.740813,1.5934889223488924,11.78578963284662,17.731727172141028,423.95549999999866,5765,0.02391200561476584
+2025-01-30 02:43:46,653:INFO:==================================================
+2025-01-30 02:43:46,770:INFO:               mean       std
+tc                           
+-20 to -1 -0.000023  0.001164
+0         -0.000009  0.001150
+1         -0.000043  0.063929
+2         -0.000230  1.161602
+3          0.049674  2.308230
+4          0.079292  3.456000
+5          0.083180  4.674186
+6          0.164451  5.830933
+7          0.190675  7.129240
+8          0.328656  6.965020
+9          0.032037  7.458826
+10         0.379795  7.356672
+11 to 20   0.611570  7.235450
+2025-01-30 02:43:46,772:INFO:==================================================
+2025-01-30 02:44:12,823:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 02:44:12,823:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a629d30>, 'better': <betting_strategies.Wong6 object at 0x15a62aba0>, 'total_simulations': 1000000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 02:44:17,571:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 02:44:17,571:INFO:{'mover': <action_strategies.CardCountMover object at 0x15bd51d30>, 'better': <betting_strategies.Wong6 object at 0x15bd52ba0>, 'total_simulations': 1000000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 02:45:20,768:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 02:45:20,769:INFO:{'mover': <action_strategies.CardCountMover object at 0x15ea95d30>, 'better': <betting_strategies.Wong6 object at 0x15ea96ba0>, 'total_simulations': 1000000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 03:02:07,055:INFO:==================================================
+2025-01-30 03:02:07,057:INFO:results:
+2025-01-30 03:02:07,057:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+1000000,46.122422,0.6512138891144963,1.0358164220336405,0.555892124,1.205251501978427,11.900960832880957,17.422021328652313,1092.9355003790697,102995,0.06409045286373033
+2025-01-30 03:02:07,057:INFO:==================================================
+2025-01-30 03:02:18,394:INFO:               mean       std
+tc                           
+-20 to -1 -0.000021  0.001174
+0         -0.000008  0.001162
+1         -0.000028  0.063414
+2          0.001656  1.177920
+3          0.016943  2.342088
+4          0.041766  3.521101
+5          0.080179  4.731510
+6          0.135234  5.969008
+7          0.211738  7.220666
+8          0.255421  7.284964
+9          0.319424  7.292540
+10         0.333796  7.271285
+11 to 20   0.416163  7.255005
+2025-01-30 03:02:18,396:INFO:==================================================
+2025-01-30 10:20:56,106:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 10:20:56,106:INFO:{'mover': <action_strategies.CardCountMover object at 0x15e791d30>, 'better': <betting_strategies.Wong6 object at 0x15e792ba0>, 'total_simulations': 1000000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 10:38:01,127:INFO:==================================================
+2025-01-30 10:38:01,128:INFO:results:
+2025-01-30 10:38:01,128:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+1000000,46.118515,0.6506845945711826,1.0353695987333609,0.548634908,1.1896174385172145,11.899584508489474,17.4482417385809,1056.7140001441585,39940,0.06638940797924599
+2025-01-30 10:38:01,128:INFO:==================================================
+2025-01-30 10:38:13,162:INFO:               mean       std
+tc                           
+-20 to -1 -0.000021  0.001174
+0         -0.000009  0.001162
+1          0.000003  0.063375
+2          0.001896  1.177952
+3          0.017982  2.342741
+4          0.043339  3.521235
+5          0.086022  4.729138
+6          0.128773  5.973133
+7          0.202731  7.215370
+8          0.230633  7.288264
+9          0.279983  7.313447
+10         0.350538  7.305936
+11 to 20   0.382616  7.316593
+2025-01-30 10:38:13,164:INFO:==================================================
+2025-01-30 10:39:41,341:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 10:39:41,342:INFO:{'mover': <action_strategies.BasicStrategyMover object at 0x15ea49d30>, 'better': <betting_strategies.Wong6 object at 0x15ea4aba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 10:41:11,948:INFO:==================================================
+2025-01-30 10:41:11,948:INFO:results:
+2025-01-30 10:41:11,948:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,46.02881,0.6523137532775669,1.0252782640502127,0.388443075,0.8439094375285149,11.390161530427987,16.8492299361028,903.9105000001982,133323,0.12296026756983466
+2025-01-30 10:41:11,948:INFO:==================================================
+2025-01-30 10:41:12,944:INFO:               mean       std
+tc                           
+-20 to -1 -0.000021  0.001177
+0         -0.000009  0.001163
+1          0.000006  0.064415
+2          0.002430  1.169540
+3          0.009604  2.315975
+4          0.044548  3.471033
+5          0.053044  4.582902
+6          0.087785  5.693752
+7          0.129324  6.738295
+8          0.177029  6.702340
+9          0.171288  6.708414
+10         0.241942  6.638602
+11 to 20   0.226783  6.560342
+2025-01-30 10:41:12,946:INFO:==================================================
+2025-01-30 12:50:54,463:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 12:50:54,464:INFO:{'mover': <action_strategies.CardCountMover object at 0x15becdd30>, 'better': <betting_strategies.WongBJA7 object at 0x15beceba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.22, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 12:52:35,287:INFO:==================================================
+2025-01-30 12:52:35,288:INFO:results:
+2025-01-30 12:52:35,288:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,45.02694,1.6124723430017673,1.0338649617286444,1.27205006,2.8250828613942742,28.274282710405593,41.74876116278952,2386.8340000261232,73795,0.3282935675086122
+2025-01-30 12:52:35,288:INFO:==================================================
+2025-01-30 12:52:36,292:INFO:               mean        std
+tc                            
+-20 to -1 -0.000021   0.001174
+0         -0.000011   0.001162
+1         -0.005032   1.161772
+2          0.003063   1.776123
+3          0.026769   3.918745
+4          0.099660   7.790771
+5          0.283063  11.853533
+6          0.335092  15.898462
+7          0.625448  19.926387
+8          0.778994  20.166151
+9          0.755000  20.325347
+10         0.633411  20.059938
+11 to 20   1.014470  20.176275
+2025-01-30 12:52:36,294:INFO:==================================================
+2025-01-30 12:53:25,424:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 12:53:25,424:INFO:{'mover': <action_strategies.CardCountMover object at 0x15e675d30>, 'better': <betting_strategies.WongBJA7 object at 0x15e676ba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.22, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 2000, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 12:55:04,991:INFO:==================================================
+2025-01-30 12:55:04,991:INFO:results:
+2025-01-30 12:55:04,991:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,45.0292,1.6014628947438552,1.0284641165844923,1.06544471,2.366077526093715,28.100191747079673,41.69065938625316,2081.0765000003958,44091,0.004528769363884871
+2025-01-30 12:55:04,992:INFO:==================================================
+2025-01-30 12:55:05,975:INFO:               mean        std
+tc                            
+-20 to -1 -0.000021   0.001174
+0         -0.000007   0.001162
+1         -0.003998   1.163409
+2          0.005358   1.775472
+3          0.022263   3.926682
+4          0.077712   7.762322
+5          0.194241  11.856150
+6          0.230076  16.018490
+7          0.544443  20.038379
+8          0.581515  20.060468
+9          0.768330  20.143955
+10         1.132470  20.348963
+11 to 20   1.363387  20.049795
+2025-01-30 12:55:05,978:INFO:==================================================
+2025-01-30 12:55:38,644:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 12:55:38,644:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a005d30>, 'better': <betting_strategies.WongBJA7 object at 0x15a006ba0>, 'total_simulations': 1000000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.22, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 2000, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 12:57:28,561:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 12:57:28,561:INFO:{'mover': <action_strategies.CardCountMover object at 0x15c9b1d30>, 'better': <betting_strategies.Wong6 object at 0x15c9b2ba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 12:57:50,102:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 12:57:50,102:INFO:{'mover': <action_strategies.CardCountMover object at 0x15e01dd30>, 'better': <betting_strategies.Wong6 object at 0x15e01eba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.2, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 12:59:32,019:INFO:==================================================
+2025-01-30 12:59:32,020:INFO:results:
+2025-01-30 12:59:32,020:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,46.11545,0.6493134385547576,1.034769966575758,0.53830122,1.1672764767109032,11.876835937592762,17.3954641111726,714.6010000000324,76451,0.047219224421651614
+2025-01-30 12:59:32,020:INFO:==================================================
+2025-01-30 12:59:33,018:INFO:               mean       std
+tc                           
+-20 to -1 -0.000022  0.001174
+0         -0.000007  0.001162
+1         -0.000026  0.062998
+2          0.001031  1.178073
+3          0.020087  2.340542
+4          0.037591  3.514580
+5          0.067718  4.736482
+6          0.140742  5.979713
+7          0.233536  7.199131
+8          0.294614  7.354270
+9          0.197287  7.190237
+10         0.276210  7.251208
+11 to 20   0.415637  7.311576
+2025-01-30 12:59:33,021:INFO:==================================================
+2025-01-30 13:05:55,113:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 13:05:55,113:INFO:{'mover': <action_strategies.CardCountMover object at 0x15c09dd30>, 'better': <betting_strategies.Linear4 object at 0x15c09eba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 13:06:19,959:INFO:==================================================
+2025-01-30 13:06:19,959:INFO:results:
+2025-01-30 13:06:19,959:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.89159,1.5275306397772166,1.0207167712091447,0.245825,1.6507185065807144,8.347369915698497,21.650376056654835,931.0,32123,0.05946051610929081
+2025-01-30 13:06:19,959:INFO:==================================================
+2025-01-30 13:06:20,304:INFO:               mean       std
+tc                           
+-20 to -1 -0.021127  1.179121
+0         -0.011243  1.162415
+1          0.000647  1.158289
+2          0.008943  1.155712
+3          0.016003  2.304848
+4          0.062042  3.462487
+5          0.108327  4.634677
+6          0.122701  4.663812
+7          0.172528  4.716610
+8          0.133180  4.731264
+9          0.174477  4.760453
+10         0.200488  4.852165
+11 to 20   0.326103  4.803316
+2025-01-30 13:06:20,307:INFO:==================================================
+2025-01-30 13:57:32,688:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 13:57:32,688:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a091d30>, 'better': <betting_strategies.Linear2D object at 0x15a092ba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 13:57:57,929:INFO:==================================================
+2025-01-30 13:57:57,930:INFO:results:
+2025-01-30 13:57:57,930:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.8945,1.2171063144113599,1.0159650576097599,0.15158,1.0176569318563276,6.26647407908464,16.13449026718023,1163.5,86379,0.04558857906378439
+2025-01-30 13:57:57,930:INFO:==================================================
+2025-01-30 13:57:58,274:INFO:               mean       std
+tc                           
+-20 to -1 -0.021216  1.179050
+0         -0.012624  1.161535
+1          0.000608  1.159639
+2          0.007554  1.154913
+3          0.015042  1.154524
+4          0.012418  1.155502
+5          0.043751  2.321846
+6          0.063992  2.322762
+7          0.100437  3.541549
+8          0.188524  3.569562
+9          0.209687  4.762319
+10         0.330894  4.779122
+11 to 20   0.302599  4.758190
+2025-01-30 13:57:58,276:INFO:==================================================
+2025-01-30 13:59:04,803:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 13:59:04,803:INFO:{'mover': <action_strategies.CardCountMover object at 0x15cb4dd30>, 'better': <betting_strategies.Linear2D object at 0x15cb4eba0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 13:59:29,428:INFO:==================================================
+2025-01-30 13:59:29,429:INFO:results:
+2025-01-30 13:59:29,429:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.89323,1.3929698258873326,1.0190422100784267,0.2062,1.3844501141399221,7.476576095798861,19.30724514866702,529.0,8945,0.05228337195278531
+2025-01-30 13:59:29,429:INFO:==================================================
+2025-01-30 13:59:29,776:INFO:               mean       std
+tc                           
+-20 to -1 -0.022831  1.176970
+0         -0.005410  1.164353
+1         -0.001459  1.157620
+2          0.006878  1.155611
+3          0.013524  1.604503
+4          0.044885  2.311971
+5          0.059229  3.480667
+6          0.136480  4.274769
+7          0.148282  4.661549
+8          0.240059  4.719570
+9          0.147734  4.779938
+10         0.184755  4.746281
+11 to 20   0.324400  4.736022
+2025-01-30 13:59:29,778:INFO:==================================================
+2025-01-30 14:01:16,318:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:01:16,319:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a9c5e80>, 'better': <betting_strategies.Linear2D object at 0x15a9c6cf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 14:01:41,143:INFO:==================================================
+2025-01-30 14:01:41,143:INFO:results:
+2025-01-30 14:01:41,143:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.89368,1.4875275857526733,1.0196105153516146,0.22676668619134555,1.5225371706146469,7.983797206479406,20.56105436804541,663.4934904686324,22120,0.058067335327998584
+2025-01-30 14:01:41,143:INFO:==================================================
+2025-01-30 14:01:41,486:INFO:               mean       std
+tc                           
+-20 to -1 -0.023563  1.178196
+0         -0.004131  1.162517
+1          0.000025  1.158410
+2          0.002703  1.335864
+3          0.012807  2.148598
+4          0.046037  3.006941
+5          0.081991  3.859821
+6          0.159621  4.602306
+7          0.175011  4.708652
+8          0.209708  4.734655
+9          0.207357  4.786448
+10         0.233337  4.802260
+11 to 20   0.293475  4.750470
+2025-01-30 14:01:41,488:INFO:==================================================
+2025-01-30 14:02:25,260:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:02:25,260:INFO:{'mover': <action_strategies.CardCountMover object at 0x159be9e80>, 'better': <betting_strategies.Linear2D object at 0x159beacf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0}
+2025-01-30 14:02:50,678:INFO:==================================================
+2025-01-30 14:02:50,679:INFO:results:
+2025-01-30 14:02:50,679:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.89046,1.3839643352366309,1.0192358710826785,0.20698517185297113,1.390001825619308,7.322496248992879,18.62413490608705,640.6468857689529,20571,0.045579635286517386
+2025-01-30 14:02:50,679:INFO:==================================================
+2025-01-30 14:02:51,014:INFO:               mean       std
+tc                           
+-20 to -1 -0.022992  1.177889
+0         -0.005887  1.160520
+1          0.003386  1.157437
+2          0.004149  1.187310
+3          0.010397  1.722735
+4          0.036256  2.406642
+5          0.062350  3.098308
+6          0.081422  3.824334
+7          0.169300  4.523243
+8          0.167479  4.710522
+9          0.239376  4.744777
+10         0.256683  4.790995
+11 to 20   0.352400  4.795853
+2025-01-30 14:02:51,017:INFO:==================================================
+2025-01-30 14:04:43,642:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:04:43,642:INFO:{'mover': <action_strategies.CardCountMover object at 0x15e6f9e80>, 'better': <betting_strategies.Linear2D object at 0x15e6facf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:05:08,532:INFO:==================================================
+2025-01-30 14:05:08,533:INFO:results:
+2025-01-30 14:05:08,533:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.89227,1.3064488720907381,1.0188396669279842,0.1915806155367203,1.2863802829297004,6.795428214036932,17.523859466214162,565.2233670795149,18966,0.03618668859457289
+2025-01-30 14:05:08,533:INFO:==================================================
+2025-01-30 14:06:10,929:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:06:10,929:INFO:{'mover': <action_strategies.CardCountMover object at 0x15ddb1e80>, 'better': <betting_strategies.Linear2D object at 0x15ddb2cf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 400, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:06:35,826:INFO:==================================================
+2025-01-30 14:06:35,827:INFO:results:
+2025-01-30 14:06:35,827:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.89361,1.382036284846716,1.0202655272876788,0.21779255496036062,1.4622838388637076,7.315609746076321,18.87323315506744,895.4628429221248,51656,0.0385549239592244
+2025-01-30 14:06:35,827:INFO:==================================================
+2025-01-30 14:06:57,134:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:06:57,134:INFO:{'mover': <action_strategies.CardCountMover object at 0x15eb15e80>, 'better': <betting_strategies.Linear2D object at 0x15eb16cf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 250, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:07:21,978:INFO:==================================================
+2025-01-30 14:07:21,978:INFO:results:
+2025-01-30 14:07:21,978:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,14.896,1.381446424163162,1.0217877043563777,0.233764606064508,1.5693112652021213,7.306543191479874,18.9629506896974,650.9949206317979,38894,0.11197845251730962
+2025-01-30 14:07:21,978:INFO:==================================================
+2025-01-30 14:22:20,817:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:22:20,818:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a34de80>, 'better': <betting_strategies.Linear2D object at 0x15a34ecf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 2, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 250, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:23:07,033:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:23:07,033:INFO:{'mover': <action_strategies.CardCountMover object at 0x15e5b1e80>, 'better': <betting_strategies.Wong6 object at 0x15e5b2cf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 500, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:24:41,669:INFO:==================================================
+2025-01-30 14:24:41,671:INFO:results:
+2025-01-30 14:24:41,671:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,43.5711,0.5950948465840888,1.0315061429486367,0.41064163,0.942443840080786,10.483620784332986,15.952302402338665,704.2595000016772,126489,0.023841391729319893
+2025-01-30 14:24:41,671:INFO:==================================================
+2025-01-30 14:26:10,673:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:26:10,673:INFO:{'mover': <action_strategies.CardCountMover object at 0x15c76de80>, 'better': <betting_strategies.Wong6 object at 0x15c76ecf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 200, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:27:44,697:INFO:==================================================
+2025-01-30 14:27:44,698:INFO:results:
+2025-01-30 14:27:44,698:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,43.56939,0.5968414021862597,1.0349915496045483,0.45615748,1.0469531328896031,10.499742687378747,15.998693853914757,726.0095000011261,94172,0.19107330244526816
+2025-01-30 14:27:44,698:INFO:==================================================
+2025-01-30 14:28:10,920:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:28:10,921:INFO:{'mover': <action_strategies.CardCountMover object at 0x15c0f1e80>, 'better': <betting_strategies.Wong6 object at 0x15c0f2cf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 250, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:29:48,160:INFO:==================================================
+2025-01-30 14:29:48,161:INFO:results:
+2025-01-30 14:29:48,161:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,43.56833,0.5913415786191484,1.0297246877272417,0.384812975,0.8832265486928782,10.429468878471845,15.63224806356976,682.8669999952326,31828,0.170522841942696
+2025-01-30 14:29:48,161:INFO:==================================================
+2025-01-30 14:47:20,283:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:47:20,283:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a71de80>, 'better': <betting_strategies.Wong6 object at 0x15a71ecf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 350, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:48:55,761:INFO:==================================================
+2025-01-30 14:48:55,761:INFO:results:
+2025-01-30 14:48:55,763:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,43.56291,0.5928762977496224,1.0304528608219088,0.395367905,0.9075773133163465,10.474966784164959,15.807382026338079,682.4055000000908,21734,0.08027376609175622
+2025-01-30 14:48:55,763:INFO:==================================================
+2025-01-30 14:51:35,888:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:51:35,888:INFO:{'mover': <action_strategies.CardCountMover object at 0x15e6b9e80>, 'better': <betting_strategies.Wong6 object at 0x15e6bacf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 320, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:53:10,135:INFO:==================================================
+2025-01-30 14:53:10,136:INFO:results:
+2025-01-30 14:53:10,136:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,43.55898,0.5948191709264083,1.0346798812060332,0.45138181,1.0362538396198262,10.515566315717852,15.902648988092839,791.591000000346,37565,0.07334717806263062
+2025-01-30 14:53:10,136:INFO:==================================================
+2025-01-30 14:54:16,488:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 14:54:16,488:INFO:{'mover': <action_strategies.CardCountMover object at 0x15e82de80>, 'better': <betting_strategies.Wong6 object at 0x15e82ecf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.25, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': True, 'units': 300, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 14:55:50,742:INFO:==================================================
+2025-01-30 14:55:50,743:INFO:results:
+2025-01-30 14:55:50,743:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,43.56999,0.5925677416956028,1.0422062624292596,0.544849455,1.2505151595134267,10.45644568900553,15.59410367795294,972.5169999915888,58144,0.05028832577025289
+2025-01-30 14:55:50,743:INFO:==================================================
+2025-01-30 15:03:07,512:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 15:03:07,512:INFO:{'mover': <action_strategies.CardCountMover object at 0x159d35e80>, 'better': <betting_strategies.Wong6 object at 0x159d36cf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.15, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': False, 'surrender_allowed': False, 'units': 300, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': True}
+2025-01-30 15:04:56,470:INFO:==================================================
+2025-01-30 15:04:56,471:INFO:results:
+2025-01-30 15:04:56,471:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,48.89276,0.7062364495274965,1.0405318162983896,0.719279515,1.4711298447630543,13.126650889793382,18.697441527629508,759.0209999960498,17450,0.08170281532700448
+2025-01-30 15:04:56,471:INFO:==================================================
+2025-01-30 15:21:43,706:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 15:21:43,706:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a7f1e80>, 'better': <betting_strategies.Wong6 object at 0x15a7f2cf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.1667, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 300, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 15:23:36,469:INFO:==================================================
+2025-01-30 15:23:36,470:INFO:results:
+2025-01-30 15:23:36,470:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,48.12855,0.6851582518068797,1.0440632043711329,0.7462611849999999,1.5505437158469948,12.7063489249194,18.214497262551877,918.9700000030134,51082,0.06244994826924494
+2025-01-30 15:23:36,470:INFO:==================================================
+2025-01-30 15:28:41,309:INFO:expected_value.run() is called with the following configurations:
+2025-01-30 15:28:41,309:INFO:{'mover': <action_strategies.CardCountMover object at 0x15a519e80>, 'better': <betting_strategies.Wong6 object at 0x15a51acf0>, 'total_simulations': 100000, 'cores': 6, 'deck_number': 6, 'shoe_penetration': 0.1667, 'dealer_peeks_for_blackjack': True, 'das': True, 'dealer_stands_soft_17': True, 'surrender_allowed': False, 'units': 280, 'hands_played': 1000, 'num_of_other_players': 0, 'plot': False}
+2025-01-30 15:30:26,947:INFO:==================================================
+2025-01-30 15:30:26,947:INFO:results:
+2025-01-30 15:30:26,947:INFO:
+shoes,hands_per_shoe,avg_bet,win_2_lose,ev_per_shoe,ev_per_100,std_per_shoe,std_per_100,max_dd,dd_duration_in_hands,risk_of_ruin
+100000,48.1261,0.6887379671321799,1.0373777517316312,0.638386225,1.3264617054875643,12.746322844944013,18.28277164008328,941.4810000000098,35337,0.11075457271030029
+2025-01-30 15:30:26,947:INFO:==================================================
