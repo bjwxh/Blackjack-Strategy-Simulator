@@ -10,7 +10,7 @@ n12,h,h,s,s,s,h,h,h,h,h
 n13,s,s,s,s,s,h,h,h,h,h
 n14,s,s,s,s,s,h,h,h,h,h
 n15,s,s,s,s,s,h,h,h,uh,uh
-n16,s,s,s,s,s,h,h,uh,us,uh
+n16,s,s,s,s,s,h,h,uh,uh,uh
 n17,s,s,s,s,s,s,s,s,s,us
 n18,s,s,s,s,s,s,s,s,s,s
 n19,s,s,s,s,s,s,s,s,s,s
@@ -32,7 +32,7 @@ s4,h,h,h,p,p,h,h,h,h,h
 s5,dh,dh,dh,dh,dh,dh,dh,dh,h,h
 s6,p,p,p,p,p,h,h,h,h,h
 s7,p,p,p,p,p,p,h,h,h,h
-s8,p,p,p,p,p,p,p,p,p,up
+s8,p,p,p,p,p,p,p,up,up,up
 s9,p,p,p,p,p,s,p,p,s,s
 s10,s,s,s,s,s,s,s,s,s,s
 s11,p,p,p,p,p,p,p,p,p,p

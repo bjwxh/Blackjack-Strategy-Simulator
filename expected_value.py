@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import inspect
 import logging
 import matplotlib.pyplot as plt
 import multiprocessing
@@ -146,8 +147,8 @@ def play_dealer(dealer_cards: Iterable[int], shoe: list[int], dealer_stands_soft
     while dealer.value() < 17 or not dealer_stands_soft_17 and dealer.value() == 17 and dealer.aces():
         dealer.add_card(get_card_from_shoe(shoe))
     dealer_value = dealer.value()
-    # logging.debug("dealer cards are: {}".format(dealer.cards))
-    # logging.debug("dealer_value = {}".format(dealer_value))
+    logging.debug("dealer cards are: {}".format(dealer.cards))
+    logging.debug("dealer_value = {}".format(dealer_value))
     return dealer_value if dealer_value <= 21 else 0
 
 
@@ -188,20 +189,20 @@ def play_hand(action_class: action_strategies.BaseMover,
                                                dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
 
         if action == "s":
-            # logging.debug("[play_hand] player stands.")
+            logging.debug("[play_hand] player stands.")
             done_hands.append(cards)
 
         elif action == "d" and can_double:
             card = get_card_from_shoe(shoe)
             hand.add_card(card)
-            # logging.debug("[play_hand] player doubles down and gets card {}. Current hand is {}.".format(card, hand.cards))
+            logging.debug("[play_hand] player doubles down and gets card {}. Current hand is {}.".format(card, hand.cards))
             done_hands.append(hand.cards)
             done_hands.append(hand.cards)  # Add the same hand twice instead of doubling the bet.
 
         elif action == "h":
             card = get_card_from_shoe(shoe)
             hand.add_card(card)
-            # logging.debug("[play_hand] player hits and gets card {}. Current hand is {}.".format(card, hand.cards))
+            logging.debug("[play_hand] player hits and gets card {}. Current hand is {}.".format(card, hand.cards))
             done_hands.append(play_hand(action_class, [hand.cards], dealer_up_card, dealer_down_card, shoe,
                                         0, deck_number, dealer_peeks_for_blackjack, das,
                                         dealer_stands_soft_17)[0])
@@ -211,13 +212,13 @@ def play_hand(action_class: action_strategies.BaseMover,
             hand2 = Hand([hand.cards[1]])
             card1 = get_card_from_shoe(shoe)
             hand1.add_card(card1)
-            # logging.debug("[play_hand] player splits and gets card {} for the 1st hand. Current hand is {}.".format(card1, hand1.cards))
+            logging.debug("[play_hand] player splits and gets card {} for the 1st hand. Current hand is {}.".format(card1, hand1.cards))
             done_hands.extend(play_hand(action_class, [hand1.cards] + hand_cards[hand_index + 1:],
                                         dealer_up_card, dealer_down_card, shoe, splits_remaining - 1, deck_number,
                                         dealer_peeks_for_blackjack, das, dealer_stands_soft_17))
             card2 = get_card_from_shoe(shoe)
             hand2.add_card(card2)
-            # logging.debug("[play_hand] player splits and gets card {} for the 2nd hand. Current hand is {}.".format(card2, hand2.cards))
+            logging.debug("[play_hand] player splits and gets card {} for the 2nd hand. Current hand is {}.".format(card2, hand2.cards))
             done_hands.extend(play_hand(action_class, [hand2.cards] + hand_cards[hand_index + 1:],
                                         dealer_up_card, dealer_down_card, shoe, splits_remaining - 1, deck_number,
                                         dealer_peeks_for_blackjack, das, dealer_stands_soft_17))
@@ -225,7 +226,7 @@ def play_hand(action_class: action_strategies.BaseMover,
 
         else:
             raise ValueError(f"invalid action: {action}.")
-    # logging.debug("[play_hand] done. return with hands = {}".format(done_hands))
+    logging.debug("[play_hand] done. return with hands = {}".format(done_hands))
     return done_hands
 
 
@@ -268,161 +269,162 @@ def simulate_hand(action_class: action_strategies.BaseMover,
                                            dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
 
     if insure and can_insure:
+        logging.debug("play takes insurance.")
         insurance_profit = 1 if dealer_down_card == 10 else -.5
 
     if dealer_peeks_for_blackjack:
         if dealer_has_blackjack and player_has_blackjack:  # Push
-            # logging.debug("dealer and player get natural blackjack. Push...")
+            logging.debug("dealer and player get natural blackjack. Push...")
             return 0 + insurance_profit
         elif dealer_has_blackjack:  # Dealer blackjack
-            # logging.debug("dealer gets natural blackjack. Player loses...")
+            logging.debug("dealer gets natural blackjack. Player loses...")
             return -1 + insurance_profit
         elif player_has_blackjack:  # Player blackjack
-            # logging.debug("players gets natural blackjack. Player wins 3 to 2...")
+            logging.debug("players gets natural blackjack. Player wins 3 to 2...")
             return 1 * 3 / 2 + insurance_profit
     else:
         if player_has_blackjack and dealer_has_blackjack:
-            # logging.debug("dealer and player get natural blackjack (no peeking). Push...")
+            logging.debug("dealer and player get natural blackjack (no peeking). Push...")
             return 0 + insurance_profit
         elif player_has_blackjack:
-            # logging.debug("players gets natural blackjack (no peeking). Player wins 3 to 2...")
+            logging.debug("players gets natural blackjack (no peeking). Player wins 3 to 2...")
             return 1 * 3 / 2 + insurance_profit
 
     if action == "u" and can_surrender_now:
-        # logging.debug("player surrenders...")
+        logging.debug("player surrenders...")
         return -.5 + insurance_profit
 
     elif action == "s":
-        # logging.debug("player stands...")
+        logging.debug("player stands...")
         dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
         if player_loses_all_bets:
-            # logging.debug("player loses: {} to {}".format(initial_hand_value, dealer_value))
+            logging.debug("player loses: {} to {}".format(initial_hand_value, dealer_value))
             return -1 + insurance_profit
         if initial_hand_value > dealer_value:
-            # logging.debug("player wins: {} to {}".format(initial_hand_value, dealer_value))
+            logging.debug("player wins: {} to {}".format(initial_hand_value, dealer_value))
             return 1 + insurance_profit
         elif initial_hand_value < dealer_value:
-            # logging.debug("player loses: {} to {}".format(initial_hand_value, dealer_value))
+            logging.debug("player loses: {} to {}".format(initial_hand_value, dealer_value))
             return -1 + insurance_profit
         logging.debug("push: {} to {}".format(initial_hand_value, dealer_value))
         return 0 + insurance_profit
 
     elif action == "d" and can_double:
         card = get_card_from_shoe(shoe)
-        # logging.debug("player doubling... get card {}".format(card))
+        logging.debug("player doubling... get card {}".format(card))
         hand.add_card(card)
         if player_loses_all_bets:
-            # logging.debug("player loses all bets")
+            logging.debug("player loses all bets")
             return -2 + insurance_profit
         if hand.value() > 21:
-            # logging.debug("player busted at {}".format(hand.value()))
+            logging.debug("player busted at {}".format(hand.value()))
             return -2 + insurance_profit
         dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
         if hand.value() > dealer_value:
-            # logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
+            logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
             return +2 + insurance_profit
         elif hand.value() < dealer_value:
-            # logging.debug("player loses {} to {}".format(hand.value(), dealer_value))
+            logging.debug("player loses {} to {}".format(hand.value(), dealer_value))
             return -2 + insurance_profit
-        # logging.debug("push {} to {}".format(hand.value(), dealer_value))
+        logging.debug("push {} to {}".format(hand.value(), dealer_value))
         return 0 + insurance_profit
 
     elif action == "h":
         card = get_card_from_shoe(shoe)
         hand.add_card(card)
-        # logging.debug("player hits ... get new card {}. Hand is {}".format(card, hand.cards))
+        logging.debug("player hits ... get new card {}. Hand is {}".format(card, hand.cards))
         if player_loses_all_bets:
-            # logging.debug("player loses all bets")
+            logging.debug("player loses all bets")
             return -1 + insurance_profit
         if hand.value() > 21:
-            # logging.debug("player busted at {}".format(hand.value()))
+            logging.debug("player busted at {}".format(hand.value()))
             return -1 + insurance_profit
         hand_cards = play_hand(action_class, [hand.cards], dealer_up_card, dealer_down_card, shoe,
                                splits_remaining, deck_number, dealer_peeks_for_blackjack, das, dealer_stands_soft_17)[0]
         hand = Hand(hand_cards)
-        # logging.debug("player keeps hitting. hand is {}".format(hand.cards))
+        logging.debug("player keeps hitting. hand is {}".format(hand.cards))
         if hand.value() > 21:
-            # logging.debug("player busted: {}".format(hand.value()))
+            logging.debug("player busted: {}".format(hand.value()))
             return -1 + insurance_profit
         dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
         if dealer_value > hand.value():
-            # logging.debug("player gets beat {} to {}".format(hand.value(), dealer_value))
+            logging.debug("player gets beat {} to {}".format(hand.value(), dealer_value))
             return -1 + insurance_profit
         elif hand.value() > dealer_value:
-            # logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
+            logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
             return 1 + insurance_profit
-        # logging.debug("push: {} to {}".format(hand.value(), dealer_value))
+        logging.debug("push: {} to {}".format(hand.value(), dealer_value))
         return 0 + insurance_profit
 
     elif action == "p" and can_split:
         hand1 = Hand([hand.cards[0]])
         hand2 = Hand([hand.cards[1]])
         if hand.cards[0] == 11:
-            # logging.debug("current 10 cards of the shoe: {}".format(shoe[-10:]))
+            logging.debug("current 10 cards of the shoe: {}".format(shoe[-10:]))
             card = get_card_from_shoe(shoe)
             hand1.add_card(card)
-            # logging.debug("player splits AA: first new card = {}. Hand is {}".format(card, hand1.cards))
+            logging.debug("player splits AA: first new card = {}. Hand is {}".format(card, hand1.cards))
             card = get_card_from_shoe(shoe)
             hand2.add_card(card)
-            # logging.debug("player splits AA: 2nd new card = {}. Hand is {}".format(card, hand2.cards))
+            logging.debug("player splits AA: 2nd new card = {}. Hand is {}".format(card, hand2.cards))
             if player_loses_all_bets:
-                # logging.debug("player loses all bets AA")
+                logging.debug("player loses all bets AA")
                 return -2 + insurance_profit
             dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)
             split_profit = 0
             if hand1.value() > 21 or dealer_value > hand1.value():
-                # logging.debug("player AA 1st hand busted or gets beat {} to {}".format(hand1.value(), dealer_value))
+                logging.debug("player AA 1st hand busted or gets beat {} to {}".format(hand1.value(), dealer_value))
                 split_profit -= 1
             elif hand1.value() > dealer_value:
-                # logging.debug("player AA 1st hand wins {} to {}".format(hand1.value(), dealer_value))
+                logging.debug("player AA 1st hand wins {} to {}".format(hand1.value(), dealer_value))
                 split_profit += 1
             if hand2.value() > 21 or dealer_value > hand2.value():
-                # logging.debug("player AA 2nd hand busted or gets beat {} to {}".format(hand2.value(), dealer_value))
+                logging.debug("player AA 2nd hand busted or gets beat {} to {}".format(hand2.value(), dealer_value))
                 split_profit -= 1
             elif hand2.value() > dealer_value:
-                # logging.debug("player AA 2nd hand wins {} to {}".format(hand2.value(), dealer_value))
+                logging.debug("player AA 2nd hand wins {} to {}".format(hand2.value(), dealer_value))
                 split_profit += 1
             return split_profit + insurance_profit
-        # logging.debug("current 10 cards of the shoe: {}".format(shoe[-10:]))
+        logging.debug("current 10 cards of the shoe: {}".format(shoe[-10:]))
         card1 = get_card_from_shoe(shoe)
         hand1.add_card(card1)
-        # logging.debug("1st card is popped. Card = {}. Hands = {}. remaining shoe = {}".format(card1, hand1.cards, shoe[-10:]))
-        # logging.debug("player split non-AA, 1st hand gets {}".format(card1))
+        logging.debug("1st card is popped. Card = {}. Hands = {}. remaining shoe = {}".format(card1, hand1.cards, shoe[-10:]))
+        logging.debug("player split non-AA, 1st hand gets {}".format(card1))
         hand1_all = play_hand(action_class, [hand1.cards], dealer_up_card, dealer_down_card, shoe,
                               splits_remaining - 1, deck_number, dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
         card2 = get_card_from_shoe(shoe)
         hand2.add_card(card2)
-        # logging.debug("2nd card is popped. Card = {}. Hands = {}. remaining shoe = {}".format(card2, hand2.cards, shoe[-10:]))
-        # logging.debug("player split non-AA, 2nd hand gets {}".format(card2))
+        logging.debug("2nd card is popped. Card = {}. Hands = {}. remaining shoe = {}".format(card2, hand2.cards, shoe[-10:]))
+        logging.debug("player split non-AA, 2nd hand gets {}".format(card2))
         hand2_all = play_hand(action_class, [hand2.cards], dealer_up_card, dealer_down_card, shoe,
                               splits_remaining - 1, deck_number, dealer_peeks_for_blackjack, das, dealer_stands_soft_17)
         all_hands = hand1_all + hand2_all
         if player_loses_all_bets:
-            # logging.debug("player loses all bets")
+            logging.debug("player loses all bets")
             return -len(all_hands) + insurance_profit
 
         split_profit = 0
         busted_counter = 0
         for hand_cards in all_hands:
             if hand.value() > 21:
-                # logging.debug("player busted {} to {}".format(hand.value(), dealer_value))
+                logging.debug("player busted {} to {}".format(hand.value(), dealer_value))
                 split_profit -= 1
                 busted_counter += 1
         if busted_counter == len(all_hands):
             return split_profit + insurance_profit
 
-        # logging.debug("player all hands are done. {} hands are: {}".format(len(all_hands), all_hands))
+        logging.debug("player all hands are done. {} hands are: {}".format(len(all_hands), all_hands))
         dealer_value = play_dealer((dealer_up_card, dealer_down_card), shoe, dealer_stands_soft_17)        
         for hand_cards in all_hands:
             hand = Hand(hand_cards)
             if hand.value() > 21 or dealer_value > hand.value():
-                # logging.debug("player busted or gets beaten {} to {}".format(hand.value(), dealer_value))
+                logging.debug("player busted or gets beaten {} to {}".format(hand.value(), dealer_value))
                 split_profit -= 1
             elif hand.value() > dealer_value:
-                # logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
+                logging.debug("player wins {} to {}".format(hand.value(), dealer_value))
                 split_profit += 1
             else:
-                # logging.debug("push: {} to {}".format(hand.value(), dealer_value))
+                logging.debug("push: {} to {}".format(hand.value(), dealer_value))
                 pass
         return split_profit + insurance_profit
 
@@ -471,12 +473,25 @@ def expected_value(action_class: action_strategies.BaseMover, betting_class: bet
         if i % 10_000 == 0:
             print(f"Games played: {readable_number(i)}/{readable_number(simulations)}")
         cards_seen = []
+        logging.debug("=" * 70)
+        logging.debug("new shoe starting...")
+        logging.debug("params:")
+        current_frame = inspect.currentframe()
+        args, _, _, values = inspect.getargvalues(current_frame)
+        for arg in args:
+            logging.debug("{}: {}".format(arg, values[arg]))
+        logging.debug("shoe: {}".format(shoe))
+        logging.debug("=" * 70)
         while len(shoe) >= reshuffle_at:
             cards_seen = get_cards_seen(deck_number, shoe)
             run_count = get_hilo_running_count(cards_seen)
             true_count = run_count / (len(shoe) / 52.0)
+            logging.debug("current shoe: {}".format(shoe[-10:]))
+            logging.debug("running count: {}".format(run_count))
+            logging.debug("true count: {}".format(true_count))
             tc_record.append(true_count)
             initial_bet = betting_class.get_bet(cards_seen, deck_number)
+            logging.debug("initial bet: {}".format(initial_bet))
             for op in range(num_of_other_players):
                 get_card_from_shoe(shoe)
             player_card_1 = get_card_from_shoe(shoe)
@@ -493,6 +508,7 @@ def expected_value(action_class: action_strategies.BaseMover, betting_class: bet
                                    dealer_down_card, shoe, 3, deck_number,
                                    dealer_peeks_for_blackjack, das, dealer_stands_soft_17, surrender_allowed)
             reward *= initial_bet
+            logging.debug("reward: {}".format(reward))
             reward_record.append(reward)
             bets.append(initial_bet)
         
@@ -589,7 +605,8 @@ def run(mover: action_strategies.BaseMover, better: betting_strategies.BaseBette
         total_simulations: int, cores: int = 2, deck_number: int = 6, shoe_penetration: float = .25,
         dealer_peeks_for_blackjack: bool = True, das: bool = True,
         dealer_stands_soft_17: bool = True, surrender_allowed: bool = True,
-        units: int = 200, hands_played: int = 1000, num_of_other_players: int = 0):
+        units: int = 200, hands_played: int = 1000, num_of_other_players: int = 0,
+        plot=True):
     logging.info("expected_value.run() is called with the following configurations:")
     logging.info(get_args_info())
     if cores > 1:
@@ -627,7 +644,7 @@ def run(mover: action_strategies.BaseMover, better: betting_strategies.BaseBette
         dd, ddd = calculate_max_drawdown_and_duration(rewards)
         summary['max_dd'] = dd
         summary['dd_duration_in_hands'] = ddd
-        summary['risk_of_ruin'] = calc_ror(summary['ev_per_100'], summary['std_per_100'], units)
+        summary['risk_of_ruin'] = calc_ror(np.mean(rewards), np.std(rewards), units)
 
     print_unit_size = 20
     print_1st = "|".join([x.center(print_unit_size) for x in summary.keys()])
@@ -644,27 +661,28 @@ def run(mover: action_strategies.BaseMover, better: betting_strategies.BaseBette
     logging.info('\n' + ','.join(summary.keys()) + '\n' + ','.join(str(x) for x in summary.values()))
     logging.info("=" * 50)
 
-    # stats for reward-true count:
-    df = pd.DataFrame({
-        'true_count': tcs,
-        'rewards': rewards
-        })
-    bins = [-21, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 21]
-    labels = ['-20 to -1', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11 to 20']
-    df['tc'] = pd.cut(df['true_count'], bins=bins, labels=labels, right=False)
-    pivot_table = df.pivot_table(values='rewards', index='tc', aggfunc={'rewards': ['mean', 'std']}, observed=False)
-    print("----------- ev per tc --------------")
-    print(pivot_table)
-    logging.info(pivot_table)
-    logging.info("=" * 50)
+    # # stats for reward-true count:
+    # df = pd.DataFrame({
+    #     'true_count': tcs,
+    #     'rewards': rewards
+    #     })
+    # bins = [-21, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 21]
+    # labels = ['-20 to -1', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11 to 20']
+    # df['tc'] = pd.cut(df['true_count'], bins=bins, labels=labels, right=False)
+    # pivot_table = df.pivot_table(values='rewards', index='tc', aggfunc={'rewards': ['mean', 'std']}, observed=False)
+    # print("----------- ev per tc --------------")
+    # print(pivot_table)
+    # logging.info(pivot_table)
+    # logging.info("=" * 50)
 
-    pnl = np.cumsum(rewards)
-    plt.plot(pnl, label="Accumulated Profit")
-    plt.xlabel("Hands played")
-    plt.ylabel("Total profit")
-    plt.title("PnL Curve")
-    plt.legend()
-    plt.show()    
+    if plot:
+        pnl = np.cumsum(rewards)
+        plt.plot(pnl, label="Accumulated Profit")
+        plt.xlabel("Hands played")
+        plt.ylabel("Total profit")
+        plt.title("PnL Curve")
+        plt.legend()
+        plt.show()    
 
 if __name__ == "__main__":
     logging.basicConfig(filename='expected_value.log', level=logging.INFO, 
